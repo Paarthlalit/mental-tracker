@@ -1,6 +1,17 @@
-import React from "react"
-
+import React from "react";
 export default function MentalHealthTracker() {
+  React.useEffect(() => {
+    const savedData = localStorage.getItem('mentalTrackerData');
+
+    if (savedData) {
+      const parsed = JSON.parse(savedData);
+
+      setDailyData(parsed.dailyData || dailyData);
+      setWeight(parsed.weight || '');
+      setBaths(parsed.baths || '');
+    }
+  }, []);
+
   const [dailyData, setDailyData] = React.useState([
     { day: 'Monday', stress: 1, trauma: 1, sleep: 1 },
     { day: 'Tuesday', stress: 1, trauma: 1, sleep: 1 },
@@ -13,6 +24,17 @@ export default function MentalHealthTracker() {
 
   const [weight, setWeight] = React.useState('');
   const [baths, setBaths] = React.useState('');
+
+  React.useEffect(() => {
+    localStorage.setItem(
+      'mentalTrackerData',
+      JSON.stringify({
+        dailyData,
+        weight,
+        baths,
+      })
+    );
+  }, [dailyData, weight, baths]);
 
   const updateValue = (index, field, value) => {
     const updated = [...dailyData];
@@ -227,9 +249,9 @@ export default function MentalHealthTracker() {
 
               <p className="text-gray-600 leading-relaxed">
                 Healing is not linear. Some days are heavy, some days are softer,
-                and both are valid. You do not have to fight every battle alone Your Pubu is always here for you.
-                This space exists to remind you that how strong you are and your feelings matter and your
-                progress counts, even when it feels small, Because you mere jaaan belongs to your Parathaa and this Paratha is always with you on your side and in your journey. So take a deep breath, be kind to yourself and love yourself, and remember that you are doing the best you can.
+                and both are valid. You do not have to fight every battle alone.
+                This space exists to remind you that your feelings matter and your
+                progress counts, even when it feels small.
               </p>
             </div>
           </div>
